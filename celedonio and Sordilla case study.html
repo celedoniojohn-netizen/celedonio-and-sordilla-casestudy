@@ -1,0 +1,574 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sports Tournament Management System</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+        }
+
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #06294a;
+            color: white;
+            position: fixed;
+            padding-top: 15px;
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .sidebar button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            background: none;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .sidebar button:hover {
+            background: #1264b0;
+        }
+
+        .content {
+            margin-left: 240px;
+            padding: 25px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cards {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 140px;
+            box-shadow: 0 2px 5px #ddd;
+        }
+
+        .card h2 {
+            color: #1264b0;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .action {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #1264b0;
+            color: white;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #06294a;
+            color: white;
+        }
+
+        .delete {
+            background: #dc3545;
+        }
+
+        .edit {
+            background: #e5a000;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 150px;
+            }
+
+            .content {
+                margin-left: 160px;
+                padding: 10px;
+            }
+
+            .cards {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h3>🏆 Sports Tournament</h3>
+        <button onclick="showPage('dashboard')">🏠 Dashboard</button>
+        <button onclick="showPage('teams')">👥 Teams</button>
+        <button onclick="showPage('players')">👤 Players</button>
+        <button onclick="showPage('sports')">🏀 Sports</button>
+    </div>
+
+    <div class="content">
+
+        <div class="topbar">
+            <b>Sports Tournament Management System</b>
+            <span>👤 Admin</span>
+        </div>
+
+        <!-- DASHBOARD -->
+
+        <div id="dashboard" class="page active">
+
+            <h2>Dashboard</h2>
+            <p>Welcome, Admin!</p>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Total Teams</h3>
+                    <h2 id="teamCount">0</h2>
+                </div>
+
+                <div class="card">
+                    <h3>Total Players</h3>
+                    <h2 id="playerCount">0</h2>
+                </div>
+
+                <div class="card">
+                    <h3>Sports</h3>
+                    <h2 id="sportCount">4</h2>
+                </div>
+
+                <div class="card">
+                    <h3>Upcoming Matches</h3>
+                    <h2>0</h2>
+                </div>
+
+            </div>
+
+            <div class="section">
+                <h3>Available Features</h3>
+                <p>Manage teams and their players.</p>
+                <p>View the available sports categories.</p>
+                <p>Add, edit, and delete records.</p>
+            </div>
+
+        </div>
+
+        <!-- TEAMS -->
+
+        <div id="teams" class="page">
+
+            <h2>Teams Management</h2>
+
+            <div class="section">
+                <input type="text" id="teamName"
+                    placeholder="Team Name">
+
+                <input type="text" id="captain"
+                    placeholder="Team Captain">
+
+                <select id="teamSport">
+                    <option value="Basketball">Basketball</option>
+                    <option value="Volleyball">Volleyball</option>
+                    <option value="Badminton">Badminton</option>
+                    <option value="Mobile Legends">Mobile Legends</option>
+                </select>
+
+                <button class="action" id="teamButton"
+                    onclick="addTeam()">Add Team</button>
+
+                <p id="teamOutput"></p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Team Name</th>
+                        <th>Captain</th>
+                        <th>Sport</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="teamsTable"></tbody>
+            </table>
+
+        </div>
+
+        <!-- PLAYERS -->
+
+        <div id="players" class="page">
+
+            <h2>Players Management</h2>
+
+            <div class="section">
+                <input type="text" id="playerName"
+                    placeholder="Player Name">
+
+                <input type="number" id="playerAge"
+                    placeholder="Age">
+
+                <select id="playerTeam">
+                    <option value="">Select Team</option>
+                </select>
+
+                <input type="text" id="position"
+                    placeholder="Position">
+
+                <button class="action" id="playerButton"
+                    onclick="addPlayer()">Add Player</button>
+
+                <p id="playerOutput"></p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Player Name</th>
+                        <th>Age</th>
+                        <th>Team</th>
+                        <th>Position</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="playersTable"></tbody>
+            </table>
+
+        </div>
+
+        <!-- SPORTS -->
+
+        <div id="sports" class="page">
+
+            <h2>Sports Categories</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h2>🏀</h2>
+                    <h3>Basketball</h3>
+                    <p>Team sport</p>
+                </div>
+
+                <div class="card">
+                    <h2>🏐</h2>
+                    <h3>Volleyball</h3>
+                    <p>Team sport</p>
+                </div>
+
+                <div class="card">
+                    <h2>🏸</h2>
+                    <h3>Badminton</h3>
+                    <p>Racket sport</p>
+                </div>
+
+                <div class="card">
+                    <h2>🎮</h2>
+                    <h3>Mobile Legends</h3>
+                    <p>Team sport</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        var teams = [];
+        var players = [];
+
+        var teamEditIndex = -1;
+        var playerEditIndex = -1;
+
+        function showPage(pageName) {
+
+            var pages = document.getElementsByClassName("page");
+
+            for (var i = 0; i < pages.length; i++) {
+                pages[i].classList.remove("active");
+            }
+
+            document.getElementById(pageName).classList.add("active");
+        }
+
+        function addTeam() {
+
+            var teamName = document.getElementById("teamName").value.trim();
+            var captain = document.getElementById("captain").value.trim();
+            var sport = document.getElementById("teamSport").value;
+
+            if (teamName == "" || captain == "") {
+                alert("Please fill in all team fields.");
+                return;
+            }
+
+            if (teamEditIndex == -1) {
+
+                teams.push({
+                    name: teamName,
+                    captain: captain,
+                    sport: sport
+                });
+
+                document.getElementById("teamOutput").innerHTML =
+                    "Team added successfully.";
+
+            } else {
+
+                teams[teamEditIndex] = {
+                    name: teamName,
+                    captain: captain,
+                    sport: sport
+                };
+
+                teamEditIndex = -1;
+
+                document.getElementById("teamOutput").innerHTML =
+                    "Team updated successfully.";
+
+                document.getElementById("teamButton").value = "Add Team";
+                document.getElementById("teamButton").innerHTML = "Add Team";
+            }
+
+            document.getElementById("teamName").value = "";
+            document.getElementById("captain").value = "";
+
+            displayTeams();
+        }
+
+        function displayTeams() {
+
+            var table = "";
+
+            for (var i = 0; i < teams.length; i++) {
+
+                table += "<tr>";
+                table += "<td>" + (i + 1) + "</td>";
+                table += "<td>" + teams[i].name + "</td>";
+                table += "<td>" + teams[i].captain + "</td>";
+                table += "<td>" + teams[i].sport + "</td>";
+
+                table += "<td>";
+                table += "<button class='action edit' onclick='editTeam(" + i + ")'>Edit</button> ";
+                table += "<button class='action delete' onclick='deleteTeam(" + i + ")'>Delete</button>";
+                table += "</td>";
+
+                table += "</tr>";
+            }
+
+            document.getElementById("teamsTable").innerHTML = table;
+            document.getElementById("teamCount").innerHTML = teams.length;
+
+            displayTeamOptions();
+        }
+
+        function editTeam(index) {
+
+            teamEditIndex = index;
+
+            document.getElementById("teamName").value = teams[index].name;
+            document.getElementById("captain").value = teams[index].captain;
+            document.getElementById("teamSport").value = teams[index].sport;
+
+            document.getElementById("teamButton").innerHTML = "Update Team";
+
+            showPage("teams");
+        }
+
+        function deleteTeam(index) {
+
+            if (confirm("Delete this team?")) {
+
+                var deletedTeam = teams[index].name;
+
+                teams.splice(index, 1);
+
+                for (var i = players.length - 1; i >= 0; i--) {
+                    if (players[i].team == deletedTeam) {
+                        players.splice(i, 1);
+                    }
+                }
+
+                displayTeams();
+                displayPlayers();
+
+                document.getElementById("teamOutput").innerHTML =
+                    "Team deleted successfully.";
+            }
+        }
+
+        function displayTeamOptions() {
+
+            var options = "<option value=''>Select Team</option>";
+
+            for (var i = 0; i < teams.length; i++) {
+                options += "<option value='" + teams[i].name + "'>" +
+                    teams[i].name + "</option>";
+            }
+
+            document.getElementById("playerTeam").innerHTML = options;
+        }
+
+        function addPlayer() {
+
+            var playerName = document.getElementById("playerName").value.trim();
+            var age = document.getElementById("playerAge").value;
+            var team = document.getElementById("playerTeam").value;
+            var position = document.getElementById("position").value.trim();
+
+            if (playerName == "" || age == "" || team == "" || position == "") {
+                alert("Please fill in all player fields.");
+                return;
+            }
+
+            if (playerEditIndex == -1) {
+
+                players.push({
+                    name: playerName,
+                    age: Number(age),
+                    team: team,
+                    position: position
+                });
+
+                document.getElementById("playerOutput").innerHTML =
+                    "Player added successfully.";
+
+            } else {
+
+                players[playerEditIndex] = {
+                    name: playerName,
+                    age: Number(age),
+                    team: team,
+                    position: position
+                };
+
+                playerEditIndex = -1;
+
+                document.getElementById("playerOutput").innerHTML =
+                    "Player updated successfully.";
+
+                document.getElementById("playerButton").innerHTML = "Add Player";
+            }
+
+            document.getElementById("playerName").value = "";
+            document.getElementById("playerAge").value = "";
+            document.getElementById("playerTeam").value = "";
+            document.getElementById("position").value = "";
+
+            displayPlayers();
+        }
+
+        function displayPlayers() {
+
+            var table = "";
+
+            for (var i = 0; i < players.length; i++) {
+
+                table += "<tr>";
+                table += "<td>" + (i + 1) + "</td>";
+                table += "<td>" + players[i].name + "</td>";
+                table += "<td>" + players[i].age + "</td>";
+                table += "<td>" + players[i].team + "</td>";
+                table += "<td>" + players[i].position + "</td>";
+
+                table += "<td>";
+                table += "<button class='action edit' onclick='editPlayer(" + i + ")'>Edit</button> ";
+                table += "<button class='action delete' onclick='deletePlayer(" + i + ")'>Delete</button>";
+                table += "</td>";
+
+                table += "</tr>";
+            }
+
+            document.getElementById("playersTable").innerHTML = table;
+            document.getElementById("playerCount").innerHTML = players.length;
+        }
+
+        function editPlayer(index) {
+
+            playerEditIndex = index;
+
+            document.getElementById("playerName").value = players[index].name;
+            document.getElementById("playerAge").value = players[index].age;
+            document.getElementById("playerTeam").value = players[index].team;
+            document.getElementById("position").value = players[index].position;
+
+            document.getElementById("playerButton").innerHTML = "Update Player";
+
+            showPage("players");
+        }
+
+        function deletePlayer(index) {
+
+            if (confirm("Delete this player?")) {
+
+                players.splice(index, 1);
+
+                displayPlayers();
+
+                document.getElementById("playerOutput").innerHTML =
+                    "Player deleted successfully.";
+            }
+        }
+
+        displayTeams();
+        displayPlayers();
+
+    </script>
+
+</body>
+</html>
